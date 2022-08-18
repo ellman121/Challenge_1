@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createElement } from 'react';
 import styled from 'styled-components';
 
-const texts = ["Hello", "Elliot!", "nice", "Lederhosen!", "Give", "me", "a" ,"Mass", "Bier!"]
-const longString = "Lorem @ipsum dolor sit amet, consectetur adipiscing @elit, sed do eiusmod tempor #incididunt ut labore et https://www.lipsum.com/ dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit #animidest #laborum."
-
+const SentenceString = "Hello Elliot! Nice Lederhosn, give me a Mass Bier!"
+const texts = SentenceString.split(" ");
+const longString = "Lorem @ipsum dolor sit amet, @elit, sed do #incididunt https://www.lipsum.com/ dolore magna #animidest #laborum."
+const words = longString.split(" ");
+const hastags = [];
+const mentions = [];
+const links = [];
+const normal = [];
 
 //MY STYLED COMPONENTS
 const MyApp = styled.div(() => ({
@@ -70,6 +75,50 @@ const Link = styled.text(() => ({
   textDecorationLine: 'underline',
 }));
 
+const Regular = styled.text(() => ({
+
+}));
+
+
+
+const styleWordsInTweet = function (WordsArray) {
+
+  //loop through the original array and create a new Array of Objects with matching type names
+  const styledWords = WordsArray.map(function (word) {
+
+    const wordObject = { text: word, type: "To be Assigned" }
+
+    if (word.startsWith('#')) {
+      wordObject.type = 'Hashtag';
+    } else if (word.startsWith('@')) {
+      wordObject.type = 'Mention';
+    } else if (word.startsWith('https://')) {
+      wordObject.type = 'Link';
+    } else {
+      wordObject.type = 'Regular';
+    }
+
+    return wordObject
+  });
+
+  //loop through the newly created array above and return a styled component based on the type name
+  const styledTweet = styledWords.map(function (styledWord) {
+    if (styledWord.type === "Hashtag") {
+      return <Hashtag>{styledWord.text} </Hashtag>
+    } else if (styledWord.type === "Mention") {
+      return <Mention>{styledWord.text} </Mention>
+    }else if (styledWord.type === "Link") {
+      return <Link>{styledWord.text} </Link>
+    }else{
+      return <Regular>{styledWord.text} </Regular>
+    }
+  });
+
+  //return the Array
+  return styledTweet
+}
+
+
 
 
 
@@ -96,16 +145,16 @@ function App() {
       .then(function setData(resultArray) {
         setTweets(resultArray);
       });
+
   }, []);
 
 
-  
 
   return (
     <MyApp>
 
       <ChallengeContainer>
-        <Headline1>Challenge 1.a : Rotate through an array of texts</Headline1>
+        <Headline1>CHALLENGE 1.a :<br></br> Rotate through an array of texts</Headline1>
 
         <ChallengeContent>
           <p>
@@ -130,16 +179,17 @@ function App() {
 
 
       <ChallengeContainer yellow>
-        <Headline1>Challenge 1.b: show Tweets provided by API and move through them</Headline1>
+        <Headline1>CHALLENGE 1.b: <br></br> show Tweets provided by API,
+          move through them and format @, # and Links</Headline1>
         <ChallengeContent>
-          <p>
-            {longString}
-          </p>
-          <p>{ Tweets[TweetIndex]?.Name}</p>
+
+          <p>{Tweets[TweetIndex]?.Name}</p>
+          <div>{styleWordsInTweet(words)}</div>
 
           <div>
             <MyButton onClick={function () {
               setTweetIndex(TweetIndex - 1)
+
             }}> Prev
             </MyButton>
 
@@ -167,4 +217,5 @@ export default App;
 
     2. What's the twitter api from your example? I can't find it :/ Used the yoga one again as a replacement for now
 
+    3. My Effect to store words in @, # and link arrays gets called twice when i reload the page and now it counts double ..
 */
