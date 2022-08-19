@@ -1,9 +1,10 @@
-import { useState, useEffect, createElement } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect, createElement } from "react";
+import styled from "styled-components";
 
-const SentenceString = "Hello Elliot! Nice Lederhosn, give me a Mass Bier!"
+const SentenceString = "Hello Elliot! Nice Lederhosn, give me a Mass Bier!";
 const texts = SentenceString.split(" ");
-const longString = "Lorem @ipsum dolor sit amet, @elit, sed do #incididunt https://www.lipsum.com/ dolore magna #animidest #laborum."
+const longString =
+  "Lorem @ipsum dolor sit amet, @elit, sed do #incididunt https://www.lipsum.com/ dolore magna #animidest #laborum.";
 const words = longString.split(" ");
 const hastags = [];
 const mentions = [];
@@ -14,30 +15,28 @@ const normal = [];
 const MyApp = styled.div(() => ({
   margin: 20,
   marginTop: 70,
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-
+  display: "flex",
+  flexDirection: "column",
+  alignSelf: "center",
 }));
 
 const ChallengeContainer = styled.div((props) => ({
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
   backgroundColor: props.yellow ? "#ffb85c" : "#9AC2C9",
   padding: 20,
   marginBottom: 20,
-  alignSelf: 'center',
+  alignSelf: "center",
   width: 500,
 }));
 
 const ChallengeContent = styled.div(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  alignItems: 'center',
-  color: 'white',
+  display: "flex",
+  flexDirection: "column",
+  alignSelf: "center",
+  alignItems: "center",
+  color: "white",
   fontSize: 20,
-
 }));
 
 const Headline1 = styled.h1(() => ({
@@ -63,150 +62,163 @@ const MyButton = styled.button`
 `;
 
 const Hashtag = styled.text(() => ({
-  fontWeight: 'bold',
+  fontWeight: "bold",
 }));
 
 const Mention = styled.text(() => ({
-  fontWeight: 'bold',
-  color: 'blue',
+  fontWeight: "bold",
+  color: "blue",
 }));
 
 const Link = styled.text(() => ({
-  textDecorationLine: 'underline',
+  textDecorationLine: "underline",
 }));
 
-const Regular = styled.text(() => ({
-
-}));
-
-
+const Regular = styled.text(() => ({}));
 
 const styleWordsInTweet = function (WordsArray) {
-
   //loop through the original array and create a new Array of Objects with matching type names
   const styledWords = WordsArray.map(function (word) {
+    const wordObject = { text: word, type: "To be Assigned" };
 
-    const wordObject = { text: word, type: "To be Assigned" }
-
-    if (word.startsWith('#')) {
-      wordObject.type = 'Hashtag';
-    } else if (word.startsWith('@')) {
-      wordObject.type = 'Mention';
-    } else if (word.startsWith('https://')) {
-      wordObject.type = 'Link';
+    if (word.startsWith("#")) {
+      wordObject.type = "Hashtag";
+    } else if (word.startsWith("@")) {
+      wordObject.type = "Mention";
+    } else if (word.startsWith("https://")) {
+      wordObject.type = "Link";
     } else {
-      wordObject.type = 'Regular';
+      wordObject.type = "Regular";
     }
 
-    return wordObject
+    return wordObject;
   });
 
   //loop through the newly created array above and return a styled component based on the type name
   const styledTweet = styledWords.map(function (styledWord) {
     if (styledWord.type === "Hashtag") {
-      return <Hashtag>{styledWord.text} </Hashtag>
+      return <Hashtag>{styledWord.text} </Hashtag>;
     } else if (styledWord.type === "Mention") {
-      return <Mention>{styledWord.text} </Mention>
-    }else if (styledWord.type === "Link") {
-      return <Link>{styledWord.text} </Link>
-    }else{
-      return <Regular>{styledWord.text} </Regular>
+      return <Mention>{styledWord.text} </Mention>;
+    } else if (styledWord.type === "Link") {
+      return <Link>{styledWord.text} </Link>;
+    } else {
+      return <Regular>{styledWord.text} </Regular>;
     }
   });
 
   //return the Array
-  return styledTweet
-}
-
-
-
-
-
+  return styledTweet;
+};
 
 function App() {
-
-
-
   const [currIndex, setCurrIndex] = useState(0);
-  const [TweetIndex, setTweetIndex] = useState(0);
-  const [Tweets, setTweets] = useState([]);
+  const [tweetIndex, setTweetIndex] = useState(0);
+  const [tweets, setTweets] = useState([
+    "If you could go back and experience a gamne for the first time everyday, what would it be?",
+    "LEC Team Managager @Rogue / jinx otp",
+    "First W with Janna top in pro @dreedy_lol #LEC2022",
+    "Check out my new website https://elliottrarden.me",
+    "@account_name #someHashtag someurl.com this is a tweet",
+  ]);
+
+  const styledWords = tweets[tweetIndex % tweets.length].split(" ").map(function (word) {
+    const wordObject = { text: word, type: "To be Assigned" };
+
+    if (word.startsWith("#")) {
+      wordObject.type = "Hashtag";
+    } else if (word.startsWith("@")) {
+      wordObject.type = "Mention";
+    } else if (word.startsWith("https://")) {
+      wordObject.type = "Link";
+    } else {
+      wordObject.type = "Regular";
+    }
+
+    return wordObject;
+  });
 
   const currentText = texts[currIndex % texts.length];
-  const Server_URL = `https://elliottrarden.me/assets/stretches.json`;  //dummy Api for testing
-
-  //get the twitter data:
-  useEffect(() => {
-    fetch(Server_URL)
-      .then((response) => response.json())
-      .then(function logData(jsn) {
-        console.log(jsn.length);
-        return jsn;
-      })
-      .then(function setData(resultArray) {
-        setTweets(resultArray);
-      });
-
-  }, []);
-
-
 
   return (
     <MyApp>
-
       <ChallengeContainer>
-        <Headline1>CHALLENGE 1.a :<br></br> Rotate through an array of texts</Headline1>
+        <Headline1>
+          CHALLENGE 1.a :<br></br> Rotate through an array of texts
+        </Headline1>
 
         <ChallengeContent>
-          <p>
-            {currentText}
-          </p>
+          <p>{currentText}</p>
 
           <div>
-            <MyButton onClick={function () {
-              setCurrIndex(currIndex - 1)
-            }}>Prev
+            <MyButton
+              disabled={currIndex === 0}
+              onClick={function () {
+                setCurrIndex(currIndex - 1);
+              }}
+            >
+              Prev
             </MyButton>
 
-            <MyButton next onClick={function () {
-              setCurrIndex(currIndex + 1)
-            }}>Next
+            <MyButton
+              next
+              onClick={function () {
+                setCurrIndex(currIndex + 1);
+              }}
+            >
+              Next
             </MyButton>
           </div>
-
         </ChallengeContent>
       </ChallengeContainer>
 
-
-
       <ChallengeContainer yellow>
-        <Headline1>CHALLENGE 1.b: <br></br> show Tweets provided by API,
-          move through them and format @, # and Links</Headline1>
+        <Headline1>
+          CHALLENGE 1.b: <br></br> show Tweets provided by API, move through
+          them and format @, # and Links
+        </Headline1>
         <ChallengeContent>
-
-          <p>{Tweets[TweetIndex]?.Name}</p>
-          <div>{styleWordsInTweet(words)}</div>
+          <p>{tweets[tweetIndex]?.Name}</p>
+          <div>{styledWords.map((sw) => {
+            switch (sw.type) {
+              case "Hashtag":
+                return <Hashtag>{sw.text} </Hashtag>;
+              case "Mention":
+                return <Mention>{sw.text} </Mention>;
+              case "Link":
+                return <Link>{sw.text} </Link>;
+              case "Regular":
+                return <Regular>{sw.text} </Regular>;
+              default:
+                return <></>
+            }
+          })}</div>
 
           <div>
-            <MyButton onClick={function () {
-              setTweetIndex(TweetIndex - 1)
-
-            }}> Prev
+            <MyButton
+              onClick={function () {
+                setTweetIndex(tweetIndex - 1);
+              }}
+            >
+              Prev
             </MyButton>
 
-            <MyButton next onClick={function () {
-              setTweetIndex(TweetIndex + 1)
-            }}> Next
+            <MyButton
+              next
+              onClick={function () {
+                setTweetIndex(tweetIndex + 1);
+              }}
+            >
+              Next
             </MyButton>
           </div>
-
         </ChallengeContent>
       </ChallengeContainer>
     </MyApp>
   );
-};
+}
 
 export default App;
-
 
 /*
 //Questions:
